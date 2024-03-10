@@ -17,16 +17,22 @@ class StudentController extends Controller
 
     public function create()
     {
-        return view('student.create',$this->data);
+        return view('pages.student.create',$this->data);
     }
 
     public function store(Request $request)
     {
         try {
             Student::create($request->all());
-            return redirect()->route('student.create')->with('success','student-created-successfull');
+            return redirect()->route('student.list')->with('success','student-created-successfull');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error',$th->getMessage());
         }
+    }
+
+    public function list_student(){
+        $this->data['students'] = Student::query()->orderBy('created_at','desc')->get();
+        $this->data['page_title'] = 'List Students';
+        return view('pages.student.list',$this->data);
     }
 }
